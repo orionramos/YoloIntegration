@@ -25,13 +25,13 @@ public class SentisYOLOv8Inference : MonoBehaviour
     // Configuración de los bounding boxes
     [Header("Bounding Box Settings")]
     public Color boundingBoxColor = Color.red;  // Color del rectángulo.
-    public float boundingBoxLineWidth = 2f;       // Grosor del rectángulo.
+    public float boundingBoxLineWidth = 5f;       // Grosor del rectángulo.
 
     // Dimensiones de entrada del modelo
     private const int MODEL_INPUT_WIDTH = 640;
     private const int MODEL_INPUT_HEIGHT = 640;
 
-    // Etiquetas para la detección (COCO, por ejemplo)
+    // Etiquetas para la detección (COCO, por ejemplo) // modificar y entrenar pers¿zonalizado
     private string[] labels = new string[] {
        "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light",
        "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow",
