@@ -27,11 +27,15 @@ public class SentisYOLOv8Inference : MonoBehaviour
     public Color boundingBoxColor = Color.red;  // Color del rectángulo.
     public float boundingBoxLineWidth = 5f;       // Grosor del rectángulo.
 
+    // Objeto a resaltar (se configura desde la interfaz de Unity)
+    [Header("Highlight Object")]
+    public string targetObject = "person"; // Cambia este valor en el Inspector para resaltar otro objeto
+
     // Dimensiones de entrada del modelo
     private const int MODEL_INPUT_WIDTH = 640;
     private const int MODEL_INPUT_HEIGHT = 640;
 
-    // Etiquetas para la detección (COCO, por ejemplo) // modificar y entrenar pers¿zonalizado
+    // Etiquetas para la detección (COCO, por ejemplo) // modificar y entrenar personalizado
     private string[] labels = new string[] {
        "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light",
        "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow",
@@ -113,7 +117,6 @@ public class SentisYOLOv8Inference : MonoBehaviour
             catch (System.Exception e)
             {
                 Debug.LogError($"Inference failed: {e.Message}");
-                
                 continue;
             }
 
@@ -213,7 +216,7 @@ public class SentisYOLOv8Inference : MonoBehaviour
         overlayTexture.SetPixels(transparentPixels);
         overlayTexture.Apply();
 
-        // Dibuja hasta 10 detecciones.
+        // Procesa hasta 10 detecciones.
         foreach (var detection in detections.Take(10))
         {
             string label = (detection.ClassId >= 0 && detection.ClassId < labels.Length)
@@ -221,8 +224,11 @@ public class SentisYOLOv8Inference : MonoBehaviour
                 : $"Unknown ({detection.ClassId})";
             resultsMessage += $"{label}: {detection.Confidence:F2} - Pos: ({detection.X:F2}, {detection.Y:F2}), Size: {detection.Width:F2}x{detection.Height:F2}\n";
 
-            // Dibuja el rectángulo para la detección.
-            DrawBoundingBox(overlayTexture, detection, boundingBoxColor);
+            // Solo dibuja el bounding box si la detección coincide con el objeto a resaltar.
+            if (label.Equals(targetObject))
+            {
+                DrawBoundingBox(overlayTexture, detection, boundingBoxColor);
+            }
         }
 
         // Actualiza el texto de resultados.
